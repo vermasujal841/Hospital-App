@@ -12,13 +12,29 @@ app.use(express.json());//it is the middle ware that does the validation check f
 
 const z = require("zod")//ZOD--> it is use for input validation 
 const schema = z.array(z.number()) //here we are validating input that is the array of number or not 
-
+// {
+//     email:string,
+//     password:atleat 8 char,
+//     country:"IN" or "US"
+// }
+// const schema = Zod.object({
+//     email:Zod.string(),
+//     password:Zod.string(),
+//     country:z.literal("IN").or(z.literal("US"))
+// })
 
 
 app.post("/health-checkup",function(req,res){
     const kidneys=req.body.kidneys;
     const kidneyLength=kidneys.length;
-    res.send("your have "+kidneyLength+" kidneys")
+    const response=schema.safeParse(kidneys)
+    if(!response.success){
+        res.send({ response});
+    }
+    else{
+        res.send("number of  "+kidneyLength+"kidneys");
+    }
+    
     
 })
 
