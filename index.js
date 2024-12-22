@@ -3,13 +3,37 @@ const express=require("express");
 const app=express();
 const port=3000;
 
+//app.get("health-checkup",...multiple function here basically the last function did not have next attribute)
 
-app.get("health-checkup",function(){
-    const username=req.headers.username;
-    const password=req.headers.password;
+//in post gerally we send data through body 
+//in get we gerally we send data through params and query
+app.use(express.json());//it is the middle ware that does the validation check for the element that is coming through req.body
+//app.use(authMiddlewhere); we can also use USE fucntion of express if we want to use the middleware before every function below
+
+const z = require("zod")//ZOD--> it is use for input validation 
+const schema = z.array(z.number()) //here we are validating input that is the array of number or not 
+
+
+
+app.post("/health-checkup",function(req,res){
+    const kidneys=req.body.kidneys;
+    const kidneyLength=kidneys.length;
+    res.send("your have "+kidneyLength+" kidneys")
     
 })
 
-app.listen(port,()=>{
-    console.log(`App is listning on the port ${port}`)
+
+
+
+
+// gloabal catches --> if some thing went wrong in the above post or get request then we can define the global catches
+app.use(function(err,req,res,next){ // also known as error handeling middleware express recognises it as an error-handeling middleware because of the four argument
+    res.json({
+        msg:"Sorry Something is up with the server"
+    })
+})
+
+
+app.listen(port,()=>{ 
+    console.log(` App is listning on the port ${port}`)
 })
